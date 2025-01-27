@@ -17,7 +17,11 @@ enum class LogLevel : uint8_t  {
 class Logger {
 
     public:
+        Logger();
         Logger(Print* target);
+
+        void attach(Print* output);
+
         void setLevel(LogLevel level);
 
 

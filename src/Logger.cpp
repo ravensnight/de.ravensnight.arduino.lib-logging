@@ -2,8 +2,16 @@
 
 using namespace LOGGING;
 
+Logger::Logger() {    
+    this->_output = 0;    
+}
+
 Logger::Logger(Print* output) {    
-    this->_output = output;    
+    attach(output);    
+}
+
+void Logger::attach(Print* output) {
+    this->_output = output;
 }
 
 void Logger::setLevel(LogLevel level) {
@@ -47,6 +55,10 @@ void Logger::error(const char* format, ...) {
 }
 
 void Logger::write(const char* prefix, const char* format, va_list& args) {
+
+    // nothing to write to
+    if (_output == 0) return; 
+
     uint8_t i = 0;
     char c = 0;
     boolean p = false;
@@ -116,6 +128,7 @@ Logger& Logger::defaultLogger() {
 
 void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t wrapAt) {
     uint8_t count = 0;
+    if (_output == 0) return;
 
     if (isEnabled(LogLevel::debug)) {
         _output->printf("[debug] %s (length=%d)\n", msg, len);
@@ -143,4 +156,4 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
 }
 
 // define the global serial logger
-Logger Logger::_defaultLogger = Logger(&Serial);
+Logger Logger::_defaultLogger = Logger();

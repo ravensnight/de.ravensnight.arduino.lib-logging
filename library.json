@@ -1,5 +1,5 @@
 {
-  "name": "Raven's Night lib-logging",
+  "name": "ravensnight/lib-logging",
   "version": "1.0.0",
   "description": "Defines a lightweight logger framework",
   "keywords": "logging lightweight",
@@ -16,8 +16,7 @@
     }
   ],
   "license": "MIT",
-  "dependencies": {
-  },
+  "dependencies": [],
   "frameworks": "arduino",
   "platforms": "atmelavr,espressif32"
 }

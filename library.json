@@ -1,0 +1,23 @@
+{
+  "name": "Raven's Night lib-logging",
+  "version": "1.0.0",
+  "description": "Defines a lightweight logger framework",
+  "keywords": "logging lightweight",
+  "repository" : {
+    "type" : "git",
+    "url" : "https://github.com/ravensnight/de.ravensnight.arduino.lib-logging"
+  }, 
+  "authors":
+  [
+    {
+      "name": "ravensnight",
+      "email": "ravensnight@hoheisels-welt.de",
+      "url": ""
+    }
+  ],
+  "license": "MIT",
+  "dependencies": {
+  },
+  "frameworks": "arduino",
+  "platforms": "atmelavr,espressif32"
+}

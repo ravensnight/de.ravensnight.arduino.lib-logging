@@ -59,7 +59,7 @@ void Logger::write(const char* prefix, const char* format, va_list& args) {
     // nothing to write to
     if (_output == 0) return; 
 
-    char buffer[1024];
+    char buffer[512] = { 0 };
     vsprintf(buffer, format, args);
 
     _output->print(buffer);

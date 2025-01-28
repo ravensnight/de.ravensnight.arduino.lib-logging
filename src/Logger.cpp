@@ -59,66 +59,10 @@ void Logger::write(const char* prefix, const char* format, va_list& args) {
     // nothing to write to
     if (_output == 0) return; 
 
-    uint8_t i = 0;
-    char c = 0;
-    boolean p = false;
-    int d;
-    double dbl;
-    char* s;
+    char buffer[1024];
+    vsprintf(buffer, format, args);
 
-    _output->printf("[%-5s] ", prefix);
-    _output->printf(format, args);
-
-    /*
-    do {
-        c = format[i];
-        if (c == '\0') break;
-
-        if (p) {
-            switch (c) {
-                case 'x':
-                    d = va_arg(args, int);
-                    _output->printf("%x", d);
-                    break;
-
-                case 's':
-                    s = va_arg(args, char*);
-                    _output->printf("%s", s);
-                    break;
-
-                case 'd':
-                    d = va_arg(args, int);
-                    _output->printf("%d", d);
-                    break;
-
-                case 'f':
-                    dbl = va_arg(args, double);
-                    _output->printf("%f", dbl);
-                    break;
-
-                default:
-                    _output->print("%");
-                    _output->print(c);
-                    break;
-            }
-
-            p = false;
-        } else {
-            switch (c) {
-                case '%':
-                    p = true;
-                    break;
-                
-                default:
-                    _output->print(c);
-                    break;
-            }
-        }
-
-        i++;
-    } while (true);
-    */
-   
+    _output->print(buffer);
     _output->print('\n');
 }
 

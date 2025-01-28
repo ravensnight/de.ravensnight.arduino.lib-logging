@@ -67,6 +67,9 @@ void Logger::write(const char* prefix, const char* format, va_list& args) {
     char* s;
 
     _output->printf("[%-5s] ", prefix);
+    _output->printf(format, args);
+
+    /*
     do {
         c = format[i];
         if (c == '\0') break;
@@ -114,7 +117,8 @@ void Logger::write(const char* prefix, const char* format, va_list& args) {
 
         i++;
     } while (true);
-    
+    */
+   
     _output->print('\n');
 }
 

@@ -6,10 +6,6 @@ Logger::Logger() {
     this->_output = 0;    
 }
 
-Logger::Logger(Print* output) {    
-    attach(output);    
-}
-
 void Logger::attach(Print* output) {
     this->_output = output;
 }
@@ -55,7 +51,7 @@ void Logger::error(const char* format, ...) {
 }
 
 void Logger::write(const char* prefix, const char* format, va_list& args) {
-
+#if(LOGGING_ENABLED > 0)
     // nothing to write to
     if (_output == 0) return; 
 
@@ -64,17 +60,19 @@ void Logger::write(const char* prefix, const char* format, va_list& args) {
 
     _output->print(buffer);
     _output->print('\n');
+#endif
 }
 
-boolean Logger::isEnabled(LogLevel level) {
+bool Logger::isEnabled(LogLevel level) {
+#if(LOGGING_ENABLED > 0)
     return (level <= _currentLevel);
-}
-
-Logger& Logger::defaultLogger() {
-    return _defaultLogger;
+#else
+    return false;
+#endif
 }
 
 void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t wrapAt) {
+#if(LOGGING_ENABLED > 0)
     uint8_t count = 0;
     if (_output == 0) return;
 
@@ -101,7 +99,8 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
  
         _output->println();
     }    
+#endif
 }
 
 // define the global serial logger
-Logger Logger::_defaultLogger = Logger();
+Logger Logger::instance = Logger();

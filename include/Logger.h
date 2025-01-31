@@ -4,6 +4,10 @@
 #include <Arduino.h>
 #include <Print.h>
 
+#ifndef LOGGING_ENABLED
+#define LOGGING_ENABLED 1
+#endif
+
 namespace LOGGING {
 
 enum class LogLevel : uint8_t  {
@@ -17,14 +21,12 @@ enum class LogLevel : uint8_t  {
 class Logger {
 
     public:
-        Logger();
-        Logger(Print* target);
+
+        static Logger instance;
 
         void attach(Print* output);
 
         void setLevel(LogLevel level);
-
-
         void debug(const char* format, ...);
         void info(const char* format, ...);
         void warn(const char* format, ...);
@@ -34,16 +36,14 @@ class Logger {
 
         boolean isEnabled(LogLevel level);        
 
-        static Logger& defaultLogger();
-
     private:
+        Logger();
 
         Print* _output;
         LogLevel _currentLevel = LogLevel::debug;
 
         void write(const char* prefix, const char* format, va_list&  args);
 
-        static Logger _defaultLogger;
 };
 
 }

@@ -22,8 +22,6 @@ class Logger {
 
     public:
 
-        static Logger instance;
-
         void attach(Print* output);
 
         void setLevel(LogLevel level);
@@ -36,8 +34,12 @@ class Logger {
 
         boolean isEnabled(LogLevel level);        
 
+        Logger& instance();
+
     private:
         Logger();
+
+        static Logger* singleton;
 
         Print* _output;
         LogLevel _currentLevel = LogLevel::debug;

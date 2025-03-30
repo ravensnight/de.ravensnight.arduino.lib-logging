@@ -102,5 +102,9 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
 #endif
 }
 
+Logger& Logger::instance() {
+    return *singleton;
+}
+
 // define the global serial logger
-Logger Logger::instance = Logger();
+Logger* Logger::singleton = new Logger();

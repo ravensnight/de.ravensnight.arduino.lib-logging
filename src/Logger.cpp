@@ -2,6 +2,8 @@
 
 using namespace LOGGING;
 
+
+
 Logger::Logger() {    
     this->_output = 0;    
 }
@@ -54,11 +56,9 @@ void Logger::write(const char* prefix, const char* format, va_list& args) {
 #if(LOGGING_ENABLED > 0)
     // nothing to write to
     if (_output == 0) return; 
+    vsprintf(_buffer, format, args);
 
-    char buffer[512] = { 0 };
-    vsprintf(buffer, format, args);
-
-    _output->print(buffer);
+    _output->print(_buffer);
     _output->print('\n');
 #endif
 }
@@ -106,3 +106,4 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
 // define the global serial logger
 LogLevel Logger::_currentLevel = LogLevel::debug;
 Print* Logger::_output = 0;
+char* Logger::_buffer = (char*)malloc(512);

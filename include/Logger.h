@@ -23,7 +23,6 @@ class Logger {
     public:
 
         static void attach(Print* output);
-
         static void setLevel(LogLevel level);
         static void debug(const char* format, ...);
         static void info(const char* format, ...);
@@ -37,6 +36,7 @@ class Logger {
     private:
         Logger();
 
+        static char* _buffer;
         static Print* _output;
         static LogLevel _currentLevel;
 

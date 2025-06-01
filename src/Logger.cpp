@@ -1,6 +1,6 @@
 #include <Logger.h>
 
-using namespace LOGGING;
+namespace ravensnight::logging {
 
 Logger::Logger() {    
     this->_output = 0;    
@@ -142,3 +142,4 @@ char* Logger::_logLine = (char*)malloc(LOGBUFFER_SIZE);
 std::mutex Logger::_mutex;
 #endif 
 
+}

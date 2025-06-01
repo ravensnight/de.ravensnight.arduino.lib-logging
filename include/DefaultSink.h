@@ -5,7 +5,7 @@
 #include <LoggerSink.h>
 #include <Print.h>
 
-namespace LOGGING {
+namespace ravensnight::logging {
 
     class DefaultSink : public LoggerSink {
 

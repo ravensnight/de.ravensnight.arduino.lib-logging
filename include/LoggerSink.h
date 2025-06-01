@@ -3,7 +3,7 @@
 
 #include <Arduino.h>
 
-namespace LOGGING {
+namespace ravensnight::logging {
 
     class LoggerSink {
 

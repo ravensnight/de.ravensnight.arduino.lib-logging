@@ -1,6 +1,6 @@
 #include <DefaultSink.h>
 
-using namespace LOGGING;
+namespace ravensnight::logging {
 
 DefaultSink::DefaultSink(Print* print) {
     _out = print;
@@ -8,4 +8,6 @@ DefaultSink::DefaultSink(Print* print) {
 
 void DefaultSink::write(const char* logline) {
     _out->println(logline);
+}
+
 }

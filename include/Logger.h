@@ -17,7 +17,7 @@
 #define LOGGING_ENABLED 1
 #endif
 
-namespace LOGGING {
+namespace ravensnight::logging {
 
 enum class LogLevel : uint8_t  {
     error = 0, 
@@ -48,7 +48,7 @@ class Logger {
         #ifdef _GLIBCXX_HAS_GTHREADS
         static std::mutex _mutex;
         #endif // _GLIBCXX_HAS_GTHREADS
-        
+
         static LoggerSink* _output;
         static LogLevel _currentLevel;
         static char* _logLine;

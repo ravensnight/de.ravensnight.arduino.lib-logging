@@ -43,6 +43,7 @@
             "defines": [
                 "PLATFORMIO=60118",
                 "ARDUINO_AVR_ATmega8",
+                "LOGGING_ENABLED=1",
                 "F_CPU=16000000L",
                 "ARDUINO_ARCH_AVR",
                 "ARDUINO=10808",

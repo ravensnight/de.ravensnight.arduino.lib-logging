@@ -7,16 +7,16 @@
 
 namespace ravensnight::logging {
 
-    extern LogLevel getLogLevel(uint16_t category);
+    extern LogLevel getLogLevel(const char* category);
 
     class Loggable {
         private:
 
-            uint16_t _category;
+            const char* _category;
 
         protected:
 
-            Loggable(uint16_t category);
+            Loggable(const char* category);
 
             bool isEnabled(LogLevel logLevel);
 
@@ -30,6 +30,8 @@ namespace ravensnight::logging {
             void error(const char* format, ...);
             void dump(const char* msg, const uint8_t* buffer, uint16_t bufferLen, uint8_t wrapAt);
 
+            void entry();
+            void leave();
     };
 
 }

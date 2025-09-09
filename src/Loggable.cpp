@@ -2,7 +2,7 @@
 
 namespace ravensnight::logging {
 
-    Loggable::Loggable(uint16_t category) {
+    Loggable::Loggable(const char* category) {
         _category = category;
     }
 
@@ -20,7 +20,7 @@ namespace ravensnight::logging {
             va_list args;
             va_start( args, format );
             if (isEnabled(LogLevel::trace)) {
-                Logger::log(LogLevel::trace, format, args);
+                Logger::write(LogLevel::trace, _category, format, args);
             }
             va_end( args );
         #endif
@@ -31,7 +31,7 @@ namespace ravensnight::logging {
             va_list args;
             va_start( args, format );
             if (isEnabled(LogLevel::debug)) {
-                Logger::log(LogLevel::debug, format, args);
+                Logger::write(LogLevel::debug, _category, format, args);
             }
             va_end( args );
         #endif
@@ -42,7 +42,7 @@ namespace ravensnight::logging {
             va_list args;
             va_start( args, format );
             if (isEnabled(LogLevel::info)) {
-                Logger::log(LogLevel::info, format, args);
+                Logger::write(LogLevel::info, _category, format, args);
             }
             va_end( args );
         #endif
@@ -53,7 +53,7 @@ namespace ravensnight::logging {
             va_list args;
             va_start( args, format );
             if (isEnabled(LogLevel::warn)) {
-                Logger::log(LogLevel::warn, format, args);
+                Logger::write(LogLevel::warn, _category, format, args);
             }
             va_end( args );
         #endif
@@ -64,7 +64,7 @@ namespace ravensnight::logging {
             va_list args;
             va_start( args, format );
             if (isEnabled(LogLevel::error)) {
-                Logger::log(LogLevel::error, format, args);
+                Logger::write(LogLevel::error, _category, format, args);
             }
             va_end( args );
         #endif
@@ -72,10 +72,25 @@ namespace ravensnight::logging {
     
     void Loggable::dump(const char* msg, const uint8_t* buffer, uint16_t bufferLen, uint8_t wrapAt) {
         #if(LOGGING_ENABLED > 0)
-            if (isEnabled(LogLevel::debug)) {
+            if (isEnabled(LogLevel::trace)) {
                 Logger::dump(msg, buffer, bufferLen, wrapAt);
             }
         #endif
     }
 
+    void Loggable::entry() {
+        #if(LOGGING_ENABLED > 0) 
+            if (isEnabled(LogLevel::trace)) {
+                Logger::write(LogLevel::trace, _category, "entry.");
+            }
+        #endif
+    }
+
+    void Loggable::leave() {
+        #if(LOGGING_ENABLED > 0) 
+            if (isEnabled(LogLevel::trace)) {
+                Logger::write(LogLevel::trace, _category, "leave.");
+            }
+        #endif
+    }
 }

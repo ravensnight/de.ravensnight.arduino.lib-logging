@@ -23,28 +23,31 @@ void Logger::log(LogLevel level, const char* format, ...) {
     if (isEnabled(level)) {
         va_list args;
         va_start( args, format );
-        write(level, format, args);
+        write(level, 0, format, args);
         va_end( args );
     }
 #endif // (LOGGING_ENABLED > 0)
 }
 
-void Logger::write(LogLevel level, const char* format, ...) {
+void Logger::write(LogLevel level, const char* category, const char* format, ...) {
     if (_output == 0) {
         return;
     };
     
     const char* prefix = Logger::_prefixes[(uint8_t)level];
 
+    if (category != 0) {
+        sprintf(_logLine, "[%s] %s ", prefix, category);
+    } else {
+        sprintf(_logLine, "[%s] ", prefix);
+    }
+
     va_list args;
     va_start( args, format );
-
-    strcpy(_logLine, prefix);
-    vsprintf(_logLine + strlen(prefix), format, args);
+    vsprintf(_logLine + strlen(_logLine), format, args);
+    va_end( args );
 
     _output->println(_logLine);    
-
-    va_end( args );
 }
 
 void Logger::debug(const char* format, ...) {
@@ -97,7 +100,7 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
     const std::lock_guard<std::mutex> lock(_mutex);
     #endif 
 
-    if ((_output == 0) || (!isEnabled(LogLevel::debug))) {
+    if ((_output == 0) || (!isEnabled(LogLevel::trace))) {
         return;
     }
 
@@ -114,7 +117,7 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
     }
 
     // print first line
-    sprintf(_logLine, "[debug] %s (length=%d)", msg, len);
+    sprintf(_logLine, "[dump] %s (length=%d)", msg, len);
     _output->println(_logLine);
 
     // print bytes
@@ -149,11 +152,11 @@ LoggerSink* Logger::_output = 0;
 #if (LOGGING_ENABLED > 0)
 char* Logger::_logLine = (char*)malloc(LOGBUFFER_SIZE);
 const char* Logger::_prefixes[LOGLEVEL_COUNT] = {
-    "[trace] ",
-    "[debug] ",
-    "[info] ",
-    "[warn] ",
-    "[error] "
+    "trace",
+    "debug",
+    "info",
+    "warn",
+    "error"
 };
 #endif
 

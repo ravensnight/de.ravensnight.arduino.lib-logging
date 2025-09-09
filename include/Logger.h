@@ -46,7 +46,7 @@ class Logger {
     public:
 
         static void attach(LoggerSink* output);
-
+        
         static void trace(const char* format, ...);
         static void debug(const char* format, ...);
         static void info(const char* format, ...);
@@ -60,7 +60,7 @@ class Logger {
         static void setLevel(LogLevel level);
 
     protected:
-        static void write(LogLevel level, const char* format, ...);
+        static void write(LogLevel level, const char* category, const char* format, ...);
 
     private:
         Logger();

@@ -16,8 +16,9 @@
 #ifndef LOGGING_ENABLED
 #define LOGGING_ENABLED 0
 #define LOGLEVEL_COUNT 0
-#else
-#define LOGGING_ENABLED 1
+#endif
+
+#if LOGGING_ENABLED > 0
 #define LOGLEVEL_COUNT 5
 #endif
 

@@ -2,13 +2,11 @@
 
 namespace ravensnight::logging
 {
-
     DefaultSink::DefaultSink(Print *print) {
         _out = print;
     }
 
-    void DefaultSink::println(const char *logline) {
+    void DefaultSink::out(const char *logline) {
         _out->println(logline);
     }
-
 }

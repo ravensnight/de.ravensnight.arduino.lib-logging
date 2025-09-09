@@ -1,5 +1,5 @@
-#ifndef __Loggable_h__
-#define __Loggable_h__
+#ifndef __ClassLogger_h__
+#define __ClassLogger_h__
 
 #include <Arduino.h>
 
@@ -9,15 +9,15 @@ namespace ravensnight::logging {
 
     extern LogLevel getLogLevel(const char* category);
 
-    class Loggable {
+    class ClassLogger {
+        
         private:
 
             const char* _category;
 
-        protected:
+        public:
 
-            Loggable(const char* category);
-
+            ClassLogger(const char* category);
             bool isEnabled(LogLevel logLevel);
 
             /**

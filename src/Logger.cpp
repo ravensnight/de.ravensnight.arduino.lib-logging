@@ -14,47 +14,45 @@ void Logger::setLevel(LogLevel level) {
     Logger::_rootLevel = level;
 }
 
-void Logger::log(LogLevel level, const char* format, ...) {
-#if(LOGGING_ENABLED > 0)
-    #ifdef _GLIBCXX_HAS_GTHREADS
-    const std::lock_guard<std::mutex> lock(_mutex);
-    #endif 
+void Logger::write(LogLevel level, const char* category, const char* format, va_list* args) {    
+    #if (LOGGING_ENABLED > 0)
+        #ifdef _GLIBCXX_HAS_GTHREADS
+        const std::lock_guard<std::mutex> lock(_mutex);
+        #endif 
 
-    if (isEnabled(level)) {
-        va_list args;
-        va_start( args, format );
-        write(level, 0, format, args);
-        va_end( args );
-    }
-#endif // (LOGGING_ENABLED > 0)
+        if (_output == 0) {
+            return;
+        };
+        
+        const char* prefix = Logger::_prefixes[(uint8_t)level];
+        const char* cat = category == 0 ? "RootLogger" : category;
+
+        sprintf(_logLine, "[%s::%s] ", cat, prefix);
+
+        if (args == 0) {
+            sprintf(_logLine + strlen(_logLine), format);
+        } else {
+            vsprintf(_logLine + strlen(_logLine), format, *args);
+        }
+        _output->out(_logLine);
+
+    #endif
 }
 
-void Logger::write(LogLevel level, const char* category, const char* format, ...) {
-    if (_output == 0) {
-        return;
-    };
-    
-    const char* prefix = Logger::_prefixes[(uint8_t)level];
-
-    if (category != 0) {
-        sprintf(_logLine, "[%s] %s ", prefix, category);
-    } else {
-        sprintf(_logLine, "[%s] ", prefix);
-    }
-
+void Logger::trace(const char* format, ...) {
+#if(LOGGING_ENABLED > 0)
     va_list args;
     va_start( args, format );
-    vsprintf(_logLine + strlen(_logLine), format, args);
+    write(LogLevel::trace, 0, format, &args);
     va_end( args );
-
-    _output->println(_logLine);    
+#endif
 }
 
 void Logger::debug(const char* format, ...) {
 #if(LOGGING_ENABLED > 0)
     va_list args;
     va_start( args, format );
-    log(LogLevel::debug, format, args);
+    write(LogLevel::debug, 0, format, &args);
     va_end( args );
 #endif
 }
@@ -63,7 +61,7 @@ void Logger::info(const char* format, ...) {
 #if(LOGGING_ENABLED > 0)
     va_list args;
     va_start( args, format );
-    log(LogLevel::info, format, args);
+    write(LogLevel::info, 0, format, &args);
     va_end( args );
 #endif
 }
@@ -72,7 +70,7 @@ void Logger::warn(const char* format, ...) {
 #if(LOGGING_ENABLED > 0)
     va_list args;
     va_start( args, format );
-    log(LogLevel::warn, format, args);
+    write(LogLevel::warn, 0, format, &args);
     va_end( args );
 #endif
 }
@@ -81,7 +79,7 @@ void Logger::error(const char* format, ...) {
 #if(LOGGING_ENABLED > 0)
     va_list args;
     va_start( args, format );
-    log(LogLevel::error, format, args);
+    write(LogLevel::error, 0, format, &args);
     va_end( args );
 #endif
 }
@@ -117,30 +115,34 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
     }
 
     // print first line
-    sprintf(_logLine, "[dump] %s (length=%d)", msg, len);
-    _output->println(_logLine);
+    sprintf(_logLine, "[dump] %s (length: %d):", msg, len);
+    _output->out(_logLine);
 
     // print bytes
     count = 0;
+    char* ptr = _logLine;
     for (uint16_t i = 0; i < len; i++) {
 
         // print line number
         if (count == 0) {
-            sprintf(_logLine, "%04X: ", i / wrap);
+            sprintf(ptr, "%04X: ", i / wrap);
+            ptr += 6;
         }
 
         // print block
-        sprintf(_logLine + (LOGBUFFER_DUMP_OFFSET + (count * 3)), "%02X ", buffer[i]);            
+        sprintf(ptr, "%02X ", buffer[i]);
+        ptr += 3;
         count++;            
 
         if (count == wrap) {
-            _output->println(_logLine);
+            _output->out(ptr);
+            ptr = _logLine;
             count = 0;
         }
     }
 
     if (count > 0) {
-        _output->println(_logLine);
+        _output->out(ptr);        
     }
 #endif
 }
@@ -148,9 +150,9 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
 // define the global serial logger
 LogLevel Logger::_rootLevel = LogLevel::debug;
 LoggerSink* Logger::_output = 0;
+char* Logger::_logLine = (char*)malloc(LOGBUFFER_SIZE + 1);
 
 #if (LOGGING_ENABLED > 0)
-char* Logger::_logLine = (char*)malloc(LOGBUFFER_SIZE);
 const char* Logger::_prefixes[LOGLEVEL_COUNT] = {
     "trace",
     "debug",

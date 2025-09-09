@@ -15,11 +15,12 @@
 
 #ifndef LOGGING_ENABLED
 #define LOGGING_ENABLED 0
-#define LOGLEVEL_COUNT 0
 #endif
 
 #if LOGGING_ENABLED > 0
 #define LOGLEVEL_COUNT 5
+#else
+#define LOGLEVEL_COUNT 0
 #endif
 
 #define LOGBUFFER_DUMP_OFFSET 5
@@ -42,7 +43,7 @@ enum class LogLevel : uint8_t  {
  */
 class Logger {
 
-    friend class Loggable;
+    friend class ClassLogger;
 
     public:
 
@@ -55,13 +56,11 @@ class Logger {
         static void error(const char* format, ...);
         static void dump(const char* msg, const uint8_t* buffer, uint16_t bufferLen, uint8_t wrapAt);
 
-        static void log(LogLevel level, const char* format, ...);
-
         static bool isEnabled(LogLevel level);        
         static void setLevel(LogLevel level);
 
     protected:
-        static void write(LogLevel level, const char* category, const char* format, ...);
+        static void write(LogLevel level, const char* category, const char* format, va_list* args);
 
     private:
         Logger();

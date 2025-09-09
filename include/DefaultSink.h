@@ -10,13 +10,12 @@ namespace ravensnight::logging {
     class DefaultSink : public LoggerSink {
 
         private:
-
             Print* _out;
 
         public:
 
             DefaultSink(Print *printer);
-            void println(const char* line);
+            void out(const char* text);
     };
 
 

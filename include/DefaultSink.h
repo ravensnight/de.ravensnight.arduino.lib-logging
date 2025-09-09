@@ -16,7 +16,7 @@ namespace ravensnight::logging {
         public:
 
             DefaultSink(Print *printer);
-            void write(const char* line);
+            void println(const char* line);
     };
 
 

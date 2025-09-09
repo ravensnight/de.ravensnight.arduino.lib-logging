@@ -8,7 +8,7 @@ namespace ravensnight::logging {
     class LoggerSink {
 
         public:
-            virtual void write(const char* line) = 0;
+            virtual void println(const char* line) = 0;
     };
 
 }

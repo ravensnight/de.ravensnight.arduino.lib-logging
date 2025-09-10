@@ -154,11 +154,11 @@ char* Logger::_logLine = (char*)malloc(LOGBUFFER_SIZE + 1);
 
 #if (LOGGING_ENABLED > 0)
 const char* Logger::_prefixes[LOGLEVEL_COUNT] = {
-    "trace",
-    "debug",
-    "info",
+    "error",
     "warn",
-    "error"
+    "info",
+    "debug",
+    "trace"
 };
 #endif
 

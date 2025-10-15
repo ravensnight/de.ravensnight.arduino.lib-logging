@@ -111,7 +111,7 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
             wrap = (LOGBUFFER_SIZE - (1 + LOGBUFFER_DUMP_OFFSET));
         }
     } else {
-        wrap = LOGBUFFER_SIZE - (1 + LOGBUFFER_DUMP_OFFSET);
+        wrap = LOGBUFFER_SIZE - (LOGBUFFER_DUMP_OFFSET + 1);
     }
 
     // print first line
@@ -119,30 +119,27 @@ void Logger::dump(const char* msg, const uint8_t* buffer, uint16_t len, uint8_t 
     _output->out(_logLine);
 
     // print bytes
-    count = 0;
-    char* ptr = _logLine;
+    uint8_t offset = 0;
     for (uint16_t i = 0; i < len; i++) {
 
         // print line number
-        if (count == 0) {
-            sprintf(ptr, "%04X: ", i / wrap);
-            ptr += 6;
+        if (offset == 0) {
+            sprintf(_logLine, "%04X: ", i / wrap);
+            offset += LOGBUFFER_DUMP_OFFSET;
         }
 
         // print block
-        sprintf(ptr, "%02X ", buffer[i]);
-        ptr += 3;
-        count++;            
+        sprintf((_logLine + offset), "%02X ", buffer[i]);
+        offset += 3;
 
-        if (count == wrap) {
-            _output->out(ptr);
-            ptr = _logLine;
-            count = 0;
+        if ((i > wrap) && ((i % wrap) == 0)) {
+            _output->out(_logLine);
+            offset = 0;
         }
     }
 
-    if (count > 0) {
-        _output->out(ptr);        
+    if (offset > 0) {
+        _output->out(_logLine);        
     }
 #endif
 }

@@ -54,7 +54,6 @@ namespace ravensnight::logging {
 
         protected:
 
-            Logger(const char* category);
             static void write(LogLevel level, const char* category, const char* format, va_list* args);
 
         public:
@@ -62,6 +61,9 @@ namespace ravensnight::logging {
             static Logger root;
 
             static void attach(LoggerSink* sink);
+
+            /** Construction */
+            Logger(const char* category);
 
             /** Which loglevel is enabled? */
             bool isEnabled(LogLevel logLevel);

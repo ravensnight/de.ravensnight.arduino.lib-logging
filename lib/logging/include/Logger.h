@@ -31,7 +31,6 @@ namespace ravensnight::logging {
         debug = 3,
         trace = 4
     };
-    #define LOGLEVEL_COUNT 5
 
     /**
      * Log level function to be implemented in main application.

@@ -21,8 +21,6 @@ namespace ravensnight::logging {
         "debug",
         "trace"
     };
-    #else 
-    const char* Logger::_prefixes[LOGLEVEL_COUNT] = {0};
     #endif
 
     Logger::Logger(const char* category) {

@@ -2,7 +2,7 @@
 #define __Logger_h__
 
 #include <Arduino.h>
-#include <LoggerSink.h>
+#include <LogAdapter.h>
 
 #ifdef _GLIBCXX_HAS_GTHREADS
 #include <mutex>
@@ -48,7 +48,7 @@ namespace ravensnight::logging {
             #endif // _GLIBCXX_HAS_GTHREADS
 
             static char* _logLine;
-            static LoggerSink*  _output;
+            static LogAdapter*  _adapter;
             static const char* _prefixes[LOGLEVEL_COUNT];
 
         protected:
@@ -57,9 +57,11 @@ namespace ravensnight::logging {
 
         public:
 
+            /** The root logger */
             static Logger root;
 
-            static void attach(LoggerSink* sink);
+            /** Attach the log adapter to be used. */
+            static void setup(LogAdapter* adapter);
 
             /** Construction */
             Logger(const char* category);

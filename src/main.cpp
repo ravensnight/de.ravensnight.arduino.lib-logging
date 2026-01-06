@@ -1,20 +1,15 @@
 #include <Arduino.h>
 
+#include <SerialLogAdapter.h>
 #include <Logger.h>
-#include <DefaultSink.h>
 
 using namespace ravensnight::logging;
 
-DefaultSink logAdapter(&Serial);
+SerialLogAdapter logAdapter;
 #define BUFLEN 64
 
 void setup() {
-    #ifdef ESP32
-    Serial.setDebugOutput(true);
-    #endif
-    Serial.begin(115200);
-
-    Logger::attach(&logAdapter);
+    Logger::setup(&logAdapter);
 }
 
 void loop() {

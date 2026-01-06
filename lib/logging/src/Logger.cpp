@@ -10,7 +10,7 @@ namespace ravensnight::logging {
 
     // define the global serial logger
     Logger Logger::root("RootLogger");
-    LoggerSink* Logger::_output = 0;
+    LogAdapter* Logger::_adapter = 0;
     char* Logger::_logLine = (char*)malloc(LOGBUFFER_SIZE + 1);
 
     #if (LOGGING_ENABLED > 0)
@@ -45,7 +45,7 @@ namespace ravensnight::logging {
             #endif 
 
             // output NULL?
-            if (_output == 0) {
+            if (_adapter == 0) {
                 return;
             };
             
@@ -59,7 +59,7 @@ namespace ravensnight::logging {
             } else {
                 vsprintf(_logLine + strlen(_logLine), format, *args);
             }
-            _output->out(_logLine);
+            _adapter->out(_logLine);
 
         #endif
     }
@@ -126,11 +126,10 @@ namespace ravensnight::logging {
             const std::lock_guard<std::mutex> lock(_mutex);
             #endif 
 
-            if ((_output == 0) || (!isEnabled(LogLevel::trace))) {
+            if ((_adapter == 0) || (!isEnabled(LogLevel::trace))) {
                 return;
             }
 
-            uint8_t count = 0;
             uint8_t wrap = wrapAt;
 
             // prepare length
@@ -144,14 +143,14 @@ namespace ravensnight::logging {
 
             // print first line
             sprintf(_logLine, "[%s:dump] %s (length: %d):", _category, msg, bufferLen);
-            _output->out(_logLine);
+            _adapter->out(_logLine);
 
             // print bytes
             uint8_t offset = 0;
             for (uint16_t i = 0; i < bufferLen; i++) {
 
                 if ((i > 0) && ((i % wrap) == 0)) {
-                    _output->out(_logLine);
+                    _adapter->out(_logLine);
                     offset = 0;
                 }
 
@@ -168,7 +167,7 @@ namespace ravensnight::logging {
             }
 
             if (offset > 0) {
-                _output->out(_logLine);        
+                _adapter->out(_logLine);        
             }
         #endif            
     }
@@ -189,8 +188,8 @@ namespace ravensnight::logging {
         #endif
     }
 
-    void Logger::attach(LoggerSink* output) {
-        Logger::_output = output;
+    void Logger::setup(LogAdapter* output) {
+        Logger::_adapter = output;
     }
 
 }

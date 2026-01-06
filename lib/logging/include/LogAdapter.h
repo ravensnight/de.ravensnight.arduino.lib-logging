@@ -1,11 +1,11 @@
-#ifndef __LoggerSink_h__
-#define __LoggerSink_h__
+#ifndef __LogAdapter_h__
+#define __LogAdapter_h__
 
 #include <Arduino.h>
 
 namespace ravensnight::logging {
 
-    class LoggerSink {
+    class LogAdapter {
 
         public:
 
@@ -19,4 +19,4 @@ namespace ravensnight::logging {
 }
 
 
-#endif // __LoggerSink_h__
+#endif // __LogAdapter_h__
